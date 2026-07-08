@@ -13,30 +13,37 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      PS4SDK: /lib/ps4-payload-sdk
+
     steps:
-      -
-        name: "Checkout"
-        uses: actions/checkout@v2
-      -
-        name: "Setup Environment"
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup Environment"
         run: |
-          git clone https://github.com/Scene-Collective/ps4-payload-sdk ~/ps4-payload-sdk && cd "$_"
+          git clone https://github.com/Scene-Collective/ps4-payload-sdk ~/ps4-payload-sdk
+          cd ~/ps4-payload-sdk
           chmod +x install.sh
           sudo ./install.sh
-      -
-        name: "Build Payload"
+
+      - name: "Build Payload"
         run: |
-          export PS4SDK=/opt/ps4sdk
+          make clean
           make
-      -
-        name: "Upload Binary Artifact"
-        uses: actions/upload-artifact@v2
+          ls -lah
+
+      - name: "Upload Binary Artifact"
+        uses: actions/upload-artifact@v4
         with:
+          name: ps4-kernel-clock-bin
           path: ./*.bin
           if-no-files-found: error
-      -
-        name: "Upload Map Artifact"
-        uses: actions/upload-artifact@v2
+
+      - name: "Upload Map Artifact"
+        uses: actions/upload-artifact@v4
         with:
+          name: ps4-kernel-clock-map
           path: ./*.map
           if-no-files-found: error
