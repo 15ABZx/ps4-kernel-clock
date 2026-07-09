@@ -21,6 +21,16 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v4
 
+      - name: "Verify Repository Sources"
+        run: |
+          test -f source/main.c
+          test -f source/kernel_utils.c
+          test -f include/fw_defines.h
+          test -f include/kernel_utils.h
+          grep -q 'SDIR.*source' Makefile
+          grep -q -- '-Iinclude' Makefile
+          find source include -maxdepth 2 -type f -print
+
       - name: "Setup Environment"
         run: |
           git clone https://github.com/Scene-Collective/ps4-payload-sdk ~/ps4-payload-sdk
@@ -31,7 +41,7 @@ jobs:
       - name: "Build Payload"
         run: |
           make clean
-          make
+          make PS4SDK="${PS4SDK}"
           ls -lah
 
       - name: "Upload Binary Artifact"
