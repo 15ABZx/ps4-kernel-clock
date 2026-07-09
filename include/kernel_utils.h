@@ -8,11 +8,9 @@
 #undef printf_notification
 #endif
 
-#define printf_notification(...)                       \
-  do {                                                 \
-    char message[256];                                 \
-    snprintf(message, sizeof(message), ##__VA_ARGS__); \
-    systemMessage(message);                            \
+#define printf_notification(...) \
+  do {                           \
+    (void)0;                     \
   } while (0)
 
 struct kpayload_get_fw_version_info {
